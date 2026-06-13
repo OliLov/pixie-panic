@@ -22,7 +22,57 @@
 
     <!-- Game Screen -->
     <section id="screen-game" class="screen">
-      <canvas id="game-canvas"></canvas>
+      <div class="game-layout">
+
+        <!-- Top bar: general info -->
+        <div class="hud-top">
+          <span class="hud-game-title">PixiePanic</span>
+          <span class="hud-timer" id="hud-timer">0:00</span>
+        </div>
+
+        <!-- Middle row: P1 panel | canvas | P2 panel -->
+        <div class="hud-middle">
+
+          <!-- P1 panel (left) -->
+          <div class="hud-side hud-side--left">
+            <span class="hud-player-label">P1</span>
+            <span class="hud-control-hint">WASD + Q</span>
+            <div class="hud-divider"></div>
+            <span class="hud-stat-label">LIVES</span>
+            <span class="hud-hearts" id="hud-p1-hearts">H H H</span>
+            <div class="hud-divider"></div>
+            <span class="hud-stat-label">BOMBS</span>
+            <span class="hud-bombs" id="hud-p1-bombs">* . .</span>
+            <div class="hud-divider"></div>
+            <span class="hud-stat-label">COOLDOWN</span>
+            <span class="hud-cd" id="hud-p1-cd">READY</span>
+          </div>
+
+          <canvas id="game-canvas"></canvas>
+
+          <!-- P2 panel (right) -->
+          <div class="hud-side hud-side--right">
+            <span class="hud-player-label">P2</span>
+            <span class="hud-control-hint">ARROWS + SPC</span>
+            <div class="hud-divider"></div>
+            <span class="hud-stat-label">LIVES</span>
+            <span class="hud-hearts" id="hud-p2-hearts">H H H</span>
+            <div class="hud-divider"></div>
+            <span class="hud-stat-label">BOMBS</span>
+            <span class="hud-bombs" id="hud-p2-bombs">* . .</span>
+            <div class="hud-divider"></div>
+            <span class="hud-stat-label">COOLDOWN</span>
+            <span class="hud-cd" id="hud-p2-cd">READY</span>
+          </div>
+
+        </div>
+
+        <!-- Bottom bar: symmetry / branding -->
+        <div class="hud-bottom">
+          <span class="hud-bottom-text">* pixie panic *</span>
+        </div>
+
+      </div>
     </section>
 
     <!-- Game Over Screen -->
@@ -39,6 +89,8 @@
     <script src="src/maze.js"></script>
     <script src="src/player.js"></script>
     <script src="src/bombs.js"></script>
+    <script src="src/powerups.js"></script>
+    <script src="src/hud.js"></script>
     <script src="src/screens.js"></script>
     <script src="src/main.js"></script>
   </body>

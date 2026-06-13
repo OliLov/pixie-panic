@@ -12,6 +12,10 @@ function buildMaze(cols, rows) {
       if (row <= 2 && col <= 2) {
         return TILE.EMPTY;
       }
+      // Keep P2 spawn clear (bottom-right corner)
+      if (row >= rows - 3 && col >= cols - 3) {
+        return TILE.EMPTY;
+      }
       return Math.random() < 0.6 ? TILE.CRATE : TILE.EMPTY;
     })
   );

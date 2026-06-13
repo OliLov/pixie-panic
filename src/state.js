@@ -4,16 +4,32 @@ let canvas;
 let ctx;
 let maze;
 
-let player = {
-  col: 1,
-  row: 1,
-  alive: true,
-};
+function makePlayer(col, row) {
+  return {
+    col, row,
+    alive: true,
+    hearts: MAX_HEARTS,
+    invincibleMs: 0,        // ms of invincibility left after a hit
+    moveCooldown: 0,
+    moveInterval: 150,      // base ms between moves — speed power-up lowers this
+    speedBoostMs: 0,        // ms of speed boost remaining
+    bombCooldown: 0,
+    maxBombs: 1,            // how many bombs the player can have active at once
+    blastRadius: BLAST_RADIUS,
+  };
+}
+
+// Two players — P1 spawns top-left, P2 spawns bottom-right
+let players = [
+  makePlayer(1, 1),
+  makePlayer(COLS - 2, ROWS - 2),
+];
 
 const keys = {};
 
-let bombs        = [];
-let gameState    = "PLAYING";
+let bombs         = [];
+let powerups      = [];   // active power-up pickups lying on the floor
+let gameState     = "PLAYING";
 let lastTimestamp = 0;
-let moveCooldown  = 0;
 let deathTimer    = 0;
+let elapsedMs     = 0;

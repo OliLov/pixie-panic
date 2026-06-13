@@ -1,15 +1,21 @@
 "use strict";
 
 function startGame() {
-  player       = { col: 1, row: 1, alive: true };
-  bombs        = [];
-  moveCooldown = 0;
-  deathTimer   = 0;
-  gameState    = "PLAYING";
-  maze         = buildMaze(COLS, ROWS);
+  players = [
+    makePlayer(1, 1),
+    makePlayer(COLS - 2, ROWS - 2),
+  ];
+  bombs       = [];
+  powerups    = [];
+  deathTimer  = 0;
+  elapsedMs   = 0;
+  gameState   = "PLAYING";
+  maze        = buildMaze(COLS, ROWS);
 
   canvas.width  = COLS * TILE_SIZE;
   canvas.height = ROWS * TILE_SIZE;
+
+  resetHud();
 
   document.getElementById("screen-start").classList.remove("active");
   document.getElementById("screen-game").classList.add("active");

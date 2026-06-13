@@ -2,13 +2,22 @@
 
 function update(dt) {
   if (gameState === "PLAYING") {
-    movePlayer(dt);
+    for (let i = 0; i < players.length; i++) {
+      if (players[i].alive) movePlayer(players[i], CONTROLS[i], dt);
+    }
     updateBombs(dt);
+    collectPowerups();
 
-    if (!player.alive) {
+    // Tick the elapsed timer and update the HUD
+    elapsedMs += dt;
+    updateHud();
+
+    // Game ends when all players are dead
+    if (players.every(p => !p.alive)) {
       gameState  = "DYING";
       deathTimer = 1000;
     }
+
   } else if (gameState === "DYING") {
     updateBombs(dt);
     deathTimer -= dt;
@@ -19,8 +28,11 @@ function update(dt) {
 function render() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawMaze(ctx, maze);
+  drawPowerups();
   drawBombs();
-  if (player.alive) drawPlayer();
+  for (let i = 0; i < players.length; i++) {
+    drawPlayer(players[i], i);
+  }
 }
 
 function loop(timestamp) {
@@ -41,15 +53,20 @@ document.addEventListener("DOMContentLoaded", () => {
   canvas = document.getElementById("game-canvas");
   ctx    = canvas.getContext("2d");
 
+  const preventKeys = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "];
+
   document.addEventListener("keydown", (e) => {
     keys[e.key] = true;
-    if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(e.key)) {
-      e.preventDefault();
-    }
-    if (e.key === " " && !e.repeat && gameState === "PLAYING") {
-      placeBomb();
+    if (preventKeys.includes(e.key)) e.preventDefault();
+
+    if (gameState !== "PLAYING") return;
+
+    // Check each player's bomb key
+    for (let i = 0; i < CONTROLS.length; i++) {
+      if (e.key === CONTROLS[i].bomb && !e.repeat) placeBomb(i);
     }
   });
+
   document.addEventListener("keyup", (e) => { keys[e.key] = false; });
 
   document.getElementById("btn-start").addEventListener("click", startGame);
