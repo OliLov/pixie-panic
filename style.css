@@ -163,7 +163,7 @@ button:active {
   --side-w: 160px;
   --border-c: #c084fc; /* soft violet border */
   --border-alt: #7dd3fc; /* sky-blue accent */
-  --bg-hud: rgba(243, 232, 255, 0.80); /* frosted lavender */
+  --bg-hud: rgba(243, 232, 255, 0.8); /* frosted lavender */
   --radius: 18px;
 }
 
@@ -345,7 +345,7 @@ button:active {
   opacity: 0.2;
 }
 
-/* Spells (was Bombs) */
+/* Spells */
 .hud-spells {
   font-size: 0.6rem;
   color: #5b21b6;

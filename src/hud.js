@@ -16,16 +16,16 @@ function heartsHTML(player) {
   return parts.join("");
 }
 
-// Bombs as * (ready) and . (used/active)
-function bombsString(playerIndex) {
+function spellsHTML(playerIndex) {
   const p      = players[playerIndex];
   const active = bombs.filter(b => b.ownerIndex === playerIndex && !b.exploding).length;
   const ready  = p.maxBombs - active;
   const parts  = [];
   for (let i = 0; i < p.maxBombs; i++) {
-    parts.push(i < ready ? "*" : ".");
+    const cls = i < ready ? "spell-ready" : "spell-spent";
+    parts.push(`<img src="assets/spell.png" class="${cls}" alt="spell" />`);
   }
-  return parts.join(" ");
+  return parts.join("");
 }
 
 function updateHud() {
@@ -37,7 +37,7 @@ function updateHud() {
     const cd = document.getElementById(`hud-p${n}-cd`);
 
     document.getElementById(`hud-p${n}-hearts`).innerHTML  = heartsHTML(p);
-    document.getElementById(`hud-p${n}-bombs`).textContent  = bombsString(i);
+    document.getElementById(`hud-p${n}-bombs`).innerHTML = spellsHTML(i);
 
     if (p.bombCooldown <= 0) {
       cd.textContent = "READY";
@@ -57,7 +57,7 @@ function resetHud() {
   document.getElementById("hud-timer-value").textContent = "0:00";
   for (let i = 1; i <= 2; i++) {
     document.getElementById(`hud-p${i}-hearts`).innerHTML  = heartsHTML({ hearts: MAX_HEARTS });
-    document.getElementById(`hud-p${i}-bombs`).textContent = "* . .";
+    document.getElementById(`hud-p${i}-bombs`).innerHTML = spellsHTML(i - 1);
     const cd = document.getElementById(`hud-p${i}-cd`);
     cd.textContent = "READY";
     cd.classList.add("ready");
