@@ -1,9 +1,9 @@
 "use strict";
 
-// Player colours: P1 pink→lavender, P2 green→cyan
-const PLAYER_COLOURS = [
-  { inner: "#ffb7d5", outer: "#b89cff", outline: "#3b1d5e" },
-  { inner: "#b6d97a", outer: "#4fc3f7", outline: "#1a3322" },
+// P1 = purple pixie, P2 = green pixie
+const PIXIE_IMGS = [
+  (() => { const img = new Image(); img.src = "assets/purple-pixie.png"; return img; })(),
+  (() => { const img = new Image(); img.src = "assets/green-pixie.png";  return img; })(),
 ];
 
 function movePlayer(player, controls, dt) {
@@ -57,31 +57,12 @@ function drawPlayer(player, colourIndex) {
 
   const cx = player.col * TILE_SIZE + TILE_SIZE / 2;
   const cy = player.row * TILE_SIZE + TILE_SIZE / 2;
-  const r  = TILE_SIZE / 2 - 6;
-  const c  = PLAYER_COLOURS[colourIndex];
+  const r  = TILE_SIZE / 2 - 4;
 
-  // Outer glow
-  const glow = ctx.createRadialGradient(cx, cy, r * 0.4, cx, cy, r * 1.6);
-  glow.addColorStop(0, "rgba(255, 183, 213, 0.25)");
-  glow.addColorStop(1, "rgba(255, 183, 213, 0)");
-  ctx.beginPath();
-  ctx.arc(cx, cy, r * 1.6, 0, Math.PI * 2);
-  ctx.fillStyle = glow;
-  ctx.fill();
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(PIXIE_IMGS[colourIndex], cx - TILE_SIZE / 2, cy - TILE_SIZE / 2, TILE_SIZE, TILE_SIZE);
 
-  // Body
-  const body = ctx.createRadialGradient(cx - r * 0.3, cy - r * 0.3, 1, cx, cy, r);
-  body.addColorStop(0, c.inner);
-  body.addColorStop(1, c.outer);
-  ctx.beginPath();
-  ctx.arc(cx, cy, r, 0, Math.PI * 2);
-  ctx.fillStyle = body;
-  ctx.fill();
-  ctx.strokeStyle = c.outline;
-  ctx.lineWidth = 2;
-  ctx.stroke();
-
-  // Speed boost indicator — small cyan ring when active
+  // Speed boost indicator — cyan ring when active
   if (player.speedBoostMs > 0) {
     ctx.beginPath();
     ctx.arc(cx, cy, r + 4, 0, Math.PI * 2);
