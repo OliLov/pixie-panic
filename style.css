@@ -4,11 +4,17 @@
 
 body {
   margin: 0;
-  /* Deep midnight sky — fairies fly at night */
-  background-color: #0d0820;
-  background-image:
-    radial-gradient(ellipse at 20% 20%, rgba(255, 100, 180, 0.06) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 80%, rgba(100, 180, 255, 0.06) 0%, transparent 50%);
+  background: transparent; /* cloud-canvas fills the sky behind everything */
+}
+
+/* Full-screen sky canvas — sits behind everything */
+#cloud-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
 }
 
 /* =============================================
@@ -21,6 +27,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  z-index: 10;
 }
 
 .screen.active {
@@ -44,26 +51,26 @@ body {
   gap: 1.6rem;
   padding: 2.8rem 2.4rem;
   width: 24rem;
-  background: linear-gradient(160deg, #1a0a3a 0%, #0d1640 100%);
-  border: 2px solid #e040fb;
-  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(18px) saturate(1.4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  border-radius: 24px;
   box-shadow:
-    0 0 24px rgba(224, 64, 251, 0.35),
-    0 0 64px rgba(224, 64, 251, 0.12),
-    inset 0 1px 0 rgba(255, 200, 255, 0.15),
-    inset 0 -1px 0 rgba(64, 196, 255, 0.1);
+    0 8px 32px rgba(168, 85, 247, 0.22),
+    0 2px 0 rgba(255,255,255,0.9) inset;
 }
 
 h1 {
   font-family: "Press Start 2P", sans-serif;
-  color: #ff80d5;
+  color: #a21caf;
   font-size: 1.3rem;
   text-align: center;
   margin: 0;
   line-height: 1.7;
   text-shadow:
-    0 0 12px rgba(255, 128, 213, 0.8),
-    0 0 32px rgba(255, 128, 213, 0.3);
+    0 0 12px rgba(217, 70, 239, 0.5),
+    0 1px 0 rgba(255,255,255,0.7);
   animation: soft-flicker 6s infinite;
 }
 
@@ -77,19 +84,18 @@ h1 {
 
 p {
   font-family: "Micro 5", sans-serif;
-  color: #c4a0ff;
+  color: #6b21a8;
   font-size: 1.25rem;
   text-align: center;
   margin: 0;
-  text-shadow: 0 0 8px rgba(196, 160, 255, 0.5);
   letter-spacing: 0.05em;
 }
 
 button {
   font-family: "Press Start 2P", sans-serif;
   font-size: 0.6rem;
-  color: #1a0a3a;
-  background: linear-gradient(135deg, #ff80d5 0%, #e040fb 100%);
+  color: #ffffff;
+  background: linear-gradient(135deg, #e879f9 0%, #a855f7 100%);
   border: none;
   border-radius: 20px;
   padding: 0.85rem 1.8rem;
@@ -97,20 +103,20 @@ button {
   letter-spacing: 0.1em;
   margin-top: 0.4rem;
   box-shadow:
-    0 0 14px rgba(224, 64, 251, 0.5),
-    0 2px 0 rgba(0,0,0,0.3);
+    0 4px 16px rgba(168, 85, 247, 0.45),
+    0 2px 0 rgba(255,255,255,0.35) inset;
   transition: transform 0.1s, box-shadow 0.15s;
   animation: fairy-pulse 2.5s ease-in-out infinite;
 }
 
 @keyframes fairy-pulse {
-  0%, 100% { box-shadow: 0 0 14px rgba(224, 64, 251, 0.5), 0 2px 0 rgba(0,0,0,0.3); }
-  50%       { box-shadow: 0 0 28px rgba(224, 64, 251, 0.8), 0 2px 0 rgba(0,0,0,0.3); }
+  0%, 100% { box-shadow: 0 4px 16px rgba(168, 85, 247, 0.45), 0 2px 0 rgba(255,255,255,0.35) inset; }
+  50%       { box-shadow: 0 4px 28px rgba(168, 85, 247, 0.75), 0 2px 0 rgba(255,255,255,0.35) inset; }
 }
 
 button:hover {
   transform: scale(1.06) translateY(-1px);
-  box-shadow: 0 0 32px rgba(224, 64, 251, 0.9), 0 4px 0 rgba(0,0,0,0.3);
+  box-shadow: 0 6px 32px rgba(168, 85, 247, 0.8), 0 2px 0 rgba(255,255,255,0.35) inset;
 }
 
 button:active {
@@ -122,24 +128,27 @@ button:active {
    ============================================= */
 
 :root {
-  --canvas-w:  calc(13 * 48px);
-  --side-w:    160px;
-  --border-c:  #e040fb;
-  --border-alt: #40c4ff;
-  --bg-hud:    #130830;
-  --radius:    16px;
+  --canvas-w:   calc(13 * 48px);
+  --side-w:     160px;
+  --border-c:   #c084fc;           /* soft violet border */
+  --border-alt: #7dd3fc;           /* sky-blue accent */
+  --bg-hud:     rgba(243, 232, 255, 0.72);  /* frosted lavender */
+  --radius:     18px;
 }
 
 .game-layout {
   display: inline-flex;
   flex-direction: column;
-  border: 3px solid var(--border-c);
+  border: 2px solid rgba(255, 255, 255, 0.80);
   border-radius: var(--radius);
   overflow: hidden;
+  position: relative;
+  z-index: 10;
   box-shadow:
-    0 0 40px rgba(224, 64, 251, 0.5),
-    0 0 100px rgba(64, 196, 255, 0.15),
-    inset 0 1px 0 rgba(255, 200, 255, 0.1);
+    0 8px 40px rgba(168, 85, 247, 0.30),
+    0 2px 0 rgba(255,255,255,0.8) inset;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 
 /* ── Top bar ──────────────────────────────── */
@@ -147,25 +156,26 @@ button:active {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(90deg, #1a0838 0%, #0d1640 50%, #1a0838 100%);
-  border-bottom: 2px solid var(--border-c);
+  background: rgba(243, 232, 255, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 2px solid rgba(192, 132, 252, 0.60);
   padding: 0.7rem 1.4rem;
   font-family: "Press Start 2P", sans-serif;
-  box-shadow: inset 0 1px 0 rgba(255, 200, 255, 0.08);
 }
 
 .hud-game-title {
   font-size: 0.7rem;
-  color: #ff80d5;
-  text-shadow: 0 0 12px rgba(255, 128, 213, 0.8);
+  color: #a21caf;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.7);
   animation: soft-flicker 6s infinite;
   letter-spacing: 0.15em;
 }
 
 .hud-timer {
   font-size: 0.8rem;
-  color: #40c4ff;
-  text-shadow: 0 0 10px rgba(64, 196, 255, 0.7);
+  color: #0284c7;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.6);
   letter-spacing: 0.12em;
 }
 
@@ -178,7 +188,9 @@ button:active {
 /* ── Side panels ──────────────────────────── */
 .hud-side {
   width: var(--side-w);
-  background: linear-gradient(180deg, #1e0840 0%, #130830 60%);
+  background: var(--bg-hud);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -188,8 +200,8 @@ button:active {
   font-family: "Press Start 2P", sans-serif;
 }
 
-.hud-side--left  { border-right: 2px solid var(--border-c); }
-.hud-side--right { border-left:  2px solid var(--border-c); }
+.hud-side--left  { border-right: 2px solid rgba(192, 132, 252, 0.55); }
+.hud-side--right { border-left:  2px solid rgba(192, 132, 252, 0.55); }
 
 /* ── Player portrait ──────────────────────── */
 .player-portrait {
@@ -197,10 +209,11 @@ button:active {
   height: 72px;
   overflow: hidden;
   border-radius: 10px 10px 0 0;
-  border: 2px solid var(--border-c);
+  border: 2px solid rgba(192, 132, 252, 0.70);
   border-bottom: none;
   position: relative;
   flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.40);
 }
 
 .player-portrait::after {
@@ -208,7 +221,7 @@ button:active {
   position: absolute;
   bottom: 0; left: 0; right: 0;
   height: 2px;
-  background: linear-gradient(to right, transparent, var(--border-c), transparent);
+  background: linear-gradient(to right, transparent, #c084fc, transparent);
 }
 
 .player-portrait img {
@@ -220,13 +233,13 @@ button:active {
 }
 
 .player-portrait--p1 {
-  box-shadow: 0 0 14px rgba(255, 128, 213, 0.5), 0 0 32px rgba(255, 128, 213, 0.15);
+  box-shadow: 0 0 14px rgba(232, 121, 249, 0.45), 0 0 32px rgba(232, 121, 249, 0.12);
 }
 .player-portrait--p2 {
-  box-shadow: 0 0 14px rgba(64, 196, 255, 0.5), 0 0 32px rgba(64, 196, 255, 0.15);
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.45), 0 0 32px rgba(56, 189, 248, 0.12);
 }
 .player-portrait.dead img {
-  filter: grayscale(100%) brightness(0.35);
+  filter: grayscale(100%) brightness(0.65);
 }
 
 .hud-player-label {
@@ -234,13 +247,13 @@ button:active {
   letter-spacing: 0.2em;
 }
 
-/* P1 pink, P2 blue */
-.hud-side--left  .hud-player-label { color: #ff80d5; text-shadow: 0 0 12px rgba(255,128,213,0.7); }
-.hud-side--right .hud-player-label { color: #40c4ff; text-shadow: 0 0 12px rgba(64,196,255,0.7); }
+/* P1 violet, P2 sky blue */
+.hud-side--left  .hud-player-label { color: #9333ea; text-shadow: 0 1px 0 rgba(255,255,255,0.6); }
+.hud-side--right .hud-player-label { color: #0284c7; text-shadow: 0 1px 0 rgba(255,255,255,0.6); }
 
 .hud-control-hint {
   font-size: 0.42rem;
-  color: #6040a0;
+  color: #a78bfa;
   letter-spacing: 0.05em;
   text-align: center;
   line-height: 1.8;
@@ -249,15 +262,14 @@ button:active {
 .hud-divider {
   width: 80%;
   height: 1px;
-  background: linear-gradient(to right, transparent, var(--border-c), transparent);
+  background: linear-gradient(to right, transparent, rgba(192, 132, 252, 0.70), transparent);
   margin: 0.15rem 0;
   flex-shrink: 0;
-  opacity: 0.6;
 }
 
 .hud-stat-label {
   font-size: 0.35rem;
-  color: #8060b0;
+  color: #7c3aed;
   letter-spacing: 0.14em;
   margin-bottom: -0.2rem;
 }
@@ -266,8 +278,8 @@ button:active {
 .hud-hearts,
 .hud-spells,
 .hud-cd {
-  background-color: rgba(224, 64, 251, 0.1);
-  border: 1px solid rgba(224, 64, 251, 0.35);
+  background-color: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(192, 132, 252, 0.50);
   border-radius: 8px;
   padding: 0.35rem 0.5rem;
   width: 90%;
@@ -282,19 +294,19 @@ button:active {
 }
 
 .hud-hearts .heart-full {
-  color: #ff80d5;
-  text-shadow: 0 0 8px rgba(255, 128, 213, 0.9);
+  color: #db2777;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.5);
 }
 
 .hud-hearts .heart-empty {
-  color: #2a1050;
+  color: #d8b4fe;
   text-shadow: none;
 }
 
 /* Spells (was Bombs) */
 .hud-spells {
   font-size: 0.6rem;
-  color: #c4a0ff;
+  color: #7c3aed;
   letter-spacing: 0.2em;
   line-height: 1;
 }
@@ -302,7 +314,7 @@ button:active {
 /* Cooldown / Recharge */
 .hud-cd {
   font-size: 0.42rem;
-  color: #3a1860;
+  color: #9ca3af;
   letter-spacing: 0.08em;
   min-height: 1.8rem;
   display: flex;
@@ -312,10 +324,10 @@ button:active {
 }
 
 .hud-cd.ready {
-  color: #80ffcc;
-  text-shadow: 0 0 10px rgba(128, 255, 204, 0.7);
-  border-color: rgba(128, 255, 204, 0.4);
-  background-color: rgba(128, 255, 204, 0.08);
+  color: #059669;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+  border-color: rgba(52, 211, 153, 0.55);
+  background-color: rgba(52, 211, 153, 0.14);
 }
 
 /* ── Canvas ───────────────────────────────── */
@@ -326,8 +338,10 @@ button:active {
 
 /* ── Bottom bar ───────────────────────────── */
 .hud-bottom {
-  background: linear-gradient(90deg, #1a0838 0%, #0d1640 50%, #1a0838 100%);
-  border-top: 2px solid var(--border-c);
+  background: rgba(243, 232, 255, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 2px solid rgba(192, 132, 252, 0.60);
   padding: 0.5rem 0;
   text-align: center;
   font-family: "Press Start 2P", sans-serif;
@@ -335,6 +349,6 @@ button:active {
 
 .hud-bottom-text {
   font-size: 0.38rem;
-  color: #4a2070;
+  color: #a78bfa;
   letter-spacing: 0.3em;
 }
