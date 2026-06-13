@@ -12,10 +12,17 @@ function update(dt) {
     elapsedMs += dt;
     updateHud();
 
-    // Game ends when all players are dead
-    if (players.every(p => !p.alive)) {
+    // Check for end condition after bombs may have just killed a player
+    const deadCount = players.filter(p => !p.alive).length;
+    if (deadCount > 0) {
+      const survivors = players.map((p, i) => ({ p, i })).filter(({ p }) => p.alive);
+      if (survivors.length === 1) {
+        winner = survivors[0].i;          // one survivor — they win
+      } else {
+        winner = "draw";                  // both died in the same explosion
+      }
       gameState  = "DYING";
-      deathTimer = 1000;
+      deathTimer = 1200;
     }
 
   } else if (gameState === "DYING") {

@@ -28,8 +28,9 @@ let players = [
 const keys = {};
 
 let bombs         = [];
-let powerups      = [];   // active power-up pickups lying on the floor
+let powerups      = [];
 let gameState     = "PLAYING";
 let lastTimestamp = 0;
 let deathTimer    = 0;
 let elapsedMs     = 0;
+let winner        = null;  // null | 0 | 1 (player index) | "draw"
