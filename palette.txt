@@ -1,0 +1,21 @@
+Role	Color	Hex
+Deep Forest Shadow
+	#1C2B24
+Moss Green
+	#3E6B48
+Leaf Green
+	#6DAA5B
+Sunlit Grass
+	#B6D97A
+Pixie Glow
+	#FFF6B7
+Fairy Pink
+	#FFB7D5
+Lavender Magic
+	#B89CFF
+Crystal Blue
+	#8BE8FF
+Mushroom Brown
+	#7A5A44
+Flower Red
+	#F05A71
