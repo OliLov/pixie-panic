@@ -7,17 +7,13 @@ function formatTime(ms) {
   return `${m}:${s}`;
 }
 
-// Hearts as H (full) and - (empty), space-separated
 function heartsHTML(player) {
   const parts = [];
   for (let i = 0; i < MAX_HEARTS; i++) {
-    if (i < player.hearts) {
-      parts.push('<span class="heart-full">H</span>');
-    } else {
-      parts.push('<span class="heart-empty">-</span>');
-    }
+    const cls = i < player.hearts ? "heart-full" : "heart-empty";
+    parts.push(`<img src="assets/heart.png" class="${cls}" alt="heart" />`);
   }
-  return parts.join(" ");
+  return parts.join("");
 }
 
 // Bombs as * (ready) and . (used/active)
