@@ -1,6 +1,0 @@
-- Characters x 4
-- Maze blocks
-- Destructible blocks
-- Power-ups
-- Logo
-- Background

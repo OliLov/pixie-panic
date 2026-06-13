@@ -29,7 +29,7 @@ function bombsString(playerIndex) {
 }
 
 function updateHud() {
-  document.getElementById("hud-timer").textContent = formatTime(elapsedMs);
+  document.getElementById("hud-timer-value").textContent = formatTime(elapsedMs);
 
   for (let i = 0; i < players.length; i++) {
     const p  = players[i];
@@ -54,7 +54,7 @@ function updateHud() {
 }
 
 function resetHud() {
-  document.getElementById("hud-timer").textContent = "0:00";
+  document.getElementById("hud-timer-value").textContent = "0:00";
   for (let i = 1; i <= 2; i++) {
     document.getElementById(`hud-p${i}-hearts`).innerHTML  = heartsHTML({ hearts: MAX_HEARTS });
     document.getElementById(`hud-p${i}-bombs`).textContent = "* . .";
