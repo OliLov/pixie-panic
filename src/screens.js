@@ -32,11 +32,11 @@ function showGameOver() {
     title.textContent   = "A Tie!";
     message.textContent = "Both fairies lost their wings!";
   } else if (winner === 0) {
-    title.textContent   = "Flora Wins!";
-    message.textContent = "Stella's magic was no match!";
+    title.textContent   = "Purpi Wins!";
+    message.textContent = "Greeni's magic was no match!";
   } else if (winner === 1) {
-    title.textContent   = "Stella Wins!";
-    message.textContent = "Flora's spell backfired!";
+    title.textContent   = "Grenni Wins!";
+    message.textContent = "Purpi's spell backfired!";
   } else {
     title.textContent   = "The Maze Wins";
     message.textContent = "Even fairies have bad days.";
