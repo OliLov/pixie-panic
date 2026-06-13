@@ -347,10 +347,20 @@ button:active {
 
 /* Spells */
 .hud-spells {
-  font-size: 0.6rem;
-  color: #5b21b6;
-  letter-spacing: 0.2em;
-  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.hud-spells img {
+  width: 16px;
+  height: 16px;
+  image-rendering: pixelated;
+}
+
+.hud-spells .spell-spent {
+  opacity: 0.2;
 }
 
 /* Cooldown / Recharge */
