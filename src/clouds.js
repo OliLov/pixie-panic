@@ -14,65 +14,113 @@
   resize();
   window.addEventListener("resize", resize);
 
-  // ── Pixel-art cloud shape ────────────────────────────────────
-  // Each entry = [col, row] in "cell" units. CELL px per unit.
-  const CELL = 6; // px per pixel-art pixel
+  const CELL = 6; // base px per pixel-art pixel
 
-  // Main fluffy body
-  const CLOUD_BODY = [
-    /* top bump   */                   [3,0],[4,0],
-    /* 2nd bump   */            [2,1],[3,1],[4,1],[5,1],
-    /* 3rd bump   */     [1,2],[2,2],[3,2],[4,2],[5,2],[6,2],
-    /* main row 1 */ [0,3],[1,3],[2,3],[3,3],[4,3],[5,3],[6,3],[7,3],
-    /* main row 2 */ [0,4],[1,4],[2,4],[3,4],[4,4],[5,4],[6,4],[7,4],
-  ];
-  // Soft bottom-edge shadow (light blue)
-  const CLOUD_SHADOW = [
-    [1,5],[2,5],[3,5],[4,5],[5,5],[6,5],
-  ];
-
-  const CLOUD_CELL_W = 8; // widest point in cells
-
-  // ── Cloud objects ────────────────────────────────────────────
-  function makeCloud(x, y) {
-    const scale = 0.7 + Math.random() * 1.0;
-    return {
-      x,
-      y,
-      speed: 0.08 + Math.random() * 0.18, // px/ms — very gentle drift
-      scale,
-      pixW: CLOUD_CELL_W * CELL * scale,
-    };
+  // Helper — fills a contiguous run of cols on a single row
+  function run(row, c0, c1) {
+    return Array.from({ length: c1 - c0 + 1 }, (_, i) => [c0 + i, row]);
   }
 
-  // Seed initial clouds spread across the full viewport width
-  const clouds = Array.from({ length: 10 }, (_, i) =>
+  // ── Cloud A — small puff (10 × 5 px) ────────────────────────
+  // . . . X X X . . . .
+  // . X X X X X X X . .
+  // X X X X X X X X X .
+  // X X X X X X X X X X
+  // . X X X X X X X X .  ← shadow row
+  const CLOUD_A = {
+    body: [
+      ...run(0, 3, 5),
+      ...run(1, 1, 7),
+      ...run(2, 0, 8),
+      ...run(3, 0, 9),
+    ],
+    shadow: [...run(4, 1, 8)],
+    cellW: 10,
+    // Small = distant = slow drift, modest scale
+    scaleMin: 0.55, scaleMax: 1.0,
+    speedMin: 0.06, speedMax: 0.12,
+  };
+
+  // ── Cloud B — medium fluff (16 × 7 px) ──────────────────────
+  // . . . X X X X . . . . . . . . .
+  // . . X X X X X X X X . . . . . .
+  // . X X X X X X X X X X X . . . .
+  // X X X X X X X X X X X X X X . .
+  // X X X X X X X X X X X X X X X X
+  // X X X X X X X X X X X X X X X X
+  // . X X X X X X X X X X X X X X .  ← shadow row
+  const CLOUD_B = {
+    body: [
+      ...run(0, 3, 6),
+      ...run(1, 2, 9),
+      ...run(2, 1, 11),
+      ...run(3, 0, 13),
+      ...run(4, 0, 15),
+      ...run(5, 0, 15),
+    ],
+    shadow: [...run(6, 1, 14)],
+    cellW: 16,
+    scaleMin: 0.75, scaleMax: 1.35,
+    speedMin: 0.10, speedMax: 0.18,
+  };
+
+  // ── Cloud C — big billow (22 × 10 px) ───────────────────────
+  // . . . . X X X X . . . . . . . . . . . . . .
+  // . . . X X X X X X X X . . . . . . . . . . .
+  // . . X X X X X X X X X X X . . X X X . . . .   ← secondary bump
+  // . X X X X X X X X X X X X X X X X X X . . .
+  // X X X X X X X X X X X X X X X X X X X X X .
+  // X X X X X X X X X X X X X X X X X X X X X X
+  // X X X X X X X X X X X X X X X X X X X X X X
+  // X X X X X X X X X X X X X X X X X X X X X X
+  // . X X X X X X X X X X X X X X X X X X X X .  ← shadow row 1
+  // . . X X X X X X X X X X X X X X X X X X . .  ← shadow row 2
+  const CLOUD_C = {
+    body: [
+      ...run(0, 4, 7),
+      ...run(1, 3, 10),
+      ...run(2, 2, 12), [15, 2], [16, 2], [17, 2],  // gap + secondary bump
+      ...run(3, 1, 18),
+      ...run(4, 0, 20),
+      ...run(5, 0, 21),
+      ...run(6, 0, 21),
+      ...run(7, 0, 21),
+    ],
+    shadow: [...run(8, 1, 20), ...run(9, 2, 19)],
+    cellW: 22,
+    // Large = close = faster, bigger on screen
+    scaleMin: 1.0, scaleMax: 1.8,
+    speedMin: 0.15, speedMax: 0.26,
+  };
+
+  const CLOUD_TYPES = [CLOUD_A, CLOUD_B, CLOUD_C];
+
+  // ── Cloud instances ──────────────────────────────────────────
+  function makeCloud(x, y) {
+    const type  = CLOUD_TYPES[Math.floor(Math.random() * CLOUD_TYPES.length)];
+    const scale = type.scaleMin + Math.random() * (type.scaleMax - type.scaleMin);
+    const speed = type.speedMin + Math.random() * (type.speedMax - type.speedMin);
+    return { x, y, type, scale, speed, pixW: type.cellW * CELL * scale };
+  }
+
+  // Seed clouds spread across the full viewport
+  const clouds = Array.from({ length: 12 }, (_, i) =>
     makeCloud(
-      (i / 10) * (window.innerWidth + 500) - 60,
+      (i / 12) * (window.innerWidth + 600) - 80,
       20 + Math.random() * window.innerHeight * 0.55
     )
   );
 
   // ── Draw one cloud ───────────────────────────────────────────
-  function drawCloud(x, y, scale) {
-    const cell = Math.round(CELL * scale);
-    // White body
+  function drawCloud(c) {
+    const cell = Math.round(CELL * c.scale);
     cCtx.fillStyle = "rgba(255, 255, 255, 0.94)";
-    for (const [cx, cy] of CLOUD_BODY) {
-      cCtx.fillRect(
-        Math.round(x + cx * cell),
-        Math.round(y + cy * cell),
-        cell, cell
-      );
+    for (const [cx, cy] of c.type.body) {
+      cCtx.fillRect(Math.round(c.x + cx * cell), Math.round(c.y + cy * cell), cell, cell);
     }
-    // Blue-grey shadow
     cCtx.fillStyle = "rgba(147, 197, 253, 0.68)";
-    for (const [cx, cy] of CLOUD_SHADOW) {
-      cCtx.fillRect(
-        Math.round(x + cx * cell),
-        Math.round(y + cy * cell),
-        cell, cell
-      );
+    for (const [cx, cy] of c.type.shadow) {
+      cCtx.fillRect(Math.round(c.x + cx * cell), Math.round(c.y + cy * cell), cell, cell);
     }
   }
 
@@ -82,37 +130,37 @@
     const dt = Math.min(ts - last, 50);
     last = ts;
 
-    // Sky gradient — repainted every frame
+    // Sky gradient
     const sky = cCtx.createLinearGradient(0, 0, 0, H);
-    sky.addColorStop(0,   "#38bdf8"); // rich sky blue at top
-    sky.addColorStop(0.5, "#7dd3fc"); // lighter mid-sky
-    sky.addColorStop(1,   "#bae6fd"); // pale horizon haze
+    sky.addColorStop(0,   "#38bdf8");
+    sky.addColorStop(0.5, "#7dd3fc");
+    sky.addColorStop(1,   "#bae6fd");
     cCtx.fillStyle = sky;
     cCtx.fillRect(0, 0, W, H);
 
-    // Distant soft sun glow in upper-right
-    const sun = cCtx.createRadialGradient(
-      W * 0.84, H * 0.10, 0,
-      W * 0.84, H * 0.10, H * 0.40
-    );
+    // Soft sun glow
+    const sun = cCtx.createRadialGradient(W * 0.84, H * 0.10, 0, W * 0.84, H * 0.10, H * 0.40);
     sun.addColorStop(0,   "rgba(254, 240, 138, 0.38)");
     sun.addColorStop(0.4, "rgba(253, 224,  71, 0.10)");
     sun.addColorStop(1,   "rgba(253, 224,  71, 0)");
     cCtx.fillStyle = sun;
     cCtx.fillRect(0, 0, W, H);
 
-    // Scroll and draw each cloud
+    // Scroll, recycle, draw
     for (const c of clouds) {
       c.x -= c.speed * dt;
       if (c.x + c.pixW < 0) {
-        // Recycle: re-enter from the right
+        const type  = CLOUD_TYPES[Math.floor(Math.random() * CLOUD_TYPES.length)];
+        const scale = type.scaleMin + Math.random() * (type.scaleMax - type.scaleMin);
+        const speed = type.speedMin + Math.random() * (type.speedMax - type.speedMin);
         c.x     = W + 40 + Math.random() * 300;
         c.y     = 20 + Math.random() * H * 0.55;
-        c.speed = 0.08 + Math.random() * 0.18;
-        c.scale = 0.7 + Math.random() * 1.0;
-        c.pixW  = CLOUD_CELL_W * CELL * c.scale;
+        c.type  = type;
+        c.scale = scale;
+        c.speed = speed;
+        c.pixW  = type.cellW * CELL * scale;
       }
-      drawCloud(c.x, c.y, c.scale);
+      drawCloud(c);
     }
 
     requestAnimationFrame(cloudLoop);
