@@ -11,12 +11,35 @@
     <title>PixiePanic</title>
   </head>
   <body>
-    <section class="start-screen">
-      <div id="screen-start" class="screen-active">
+    <!-- Start Screen -->
+    <section id="screen-start" class="screen active">
+      <div class="panel">
         <h1>PixiePanic</h1>
         <p>Navigate the maze and place bombs!</p>
         <button id="btn-start">Start Game</button>
       </div>
     </section>
+
+    <!-- Game Screen -->
+    <section id="screen-game" class="screen">
+      <canvas id="game-canvas"></canvas>
+    </section>
+
+    <!-- Game Over Screen -->
+    <section id="screen-gameover" class="screen">
+      <div class="panel">
+        <h1>Game Over</h1>
+        <p>You were caught in your own blast!</p>
+        <button id="btn-restart">Play Again</button>
+      </div>
+    </section>
+
+    <script src="src/constants.js"></script>
+    <script src="src/state.js"></script>
+    <script src="src/maze.js"></script>
+    <script src="src/player.js"></script>
+    <script src="src/bombs.js"></script>
+    <script src="src/screens.js"></script>
+    <script src="src/main.js"></script>
   </body>
 </html>

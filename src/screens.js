@@ -1,11 +1,6 @@
 "use strict";
 
-function showGameOver() {
-  document.getElementById("screen-game").classList.remove("active");
-  document.getElementById("screen-gameover").classList.add("active");
-}
-
-function resetGame() {
+function startGame() {
   player       = { col: 1, row: 1, alive: true };
   bombs        = [];
   moveCooldown = 0;
@@ -13,8 +8,21 @@ function resetGame() {
   gameState    = "PLAYING";
   maze         = buildMaze(COLS, ROWS);
 
-  document.getElementById("screen-gameover").classList.remove("active");
+  canvas.width  = COLS * TILE_SIZE;
+  canvas.height = ROWS * TILE_SIZE;
+
+  document.getElementById("screen-start").classList.remove("active");
   document.getElementById("screen-game").classList.add("active");
 
   requestAnimationFrame((ts) => { lastTimestamp = ts; requestAnimationFrame(loop); });
+}
+
+function showGameOver() {
+  document.getElementById("screen-game").classList.remove("active");
+  document.getElementById("screen-gameover").classList.add("active");
+}
+
+function resetGame() {
+  document.getElementById("screen-gameover").classList.remove("active");
+  document.getElementById("screen-start").classList.add("active");
 }

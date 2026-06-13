@@ -41,11 +41,6 @@ document.addEventListener("DOMContentLoaded", () => {
   canvas = document.getElementById("game-canvas");
   ctx    = canvas.getContext("2d");
 
-  canvas.width  = COLS * TILE_SIZE;
-  canvas.height = ROWS * TILE_SIZE;
-
-  maze = buildMaze(COLS, ROWS);
-
   document.addEventListener("keydown", (e) => {
     keys[e.key] = true;
     if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(e.key)) {
@@ -57,7 +52,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   document.addEventListener("keyup", (e) => { keys[e.key] = false; });
 
+  document.getElementById("btn-start").addEventListener("click", startGame);
   document.getElementById("btn-restart").addEventListener("click", resetGame);
-
-  requestAnimationFrame((ts) => { lastTimestamp = ts; requestAnimationFrame(loop); });
 });
