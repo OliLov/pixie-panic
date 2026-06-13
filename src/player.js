@@ -62,12 +62,18 @@ function drawPlayer(player, colourIndex) {
   ctx.imageSmoothingEnabled = false;
   ctx.drawImage(PIXIE_IMGS[colourIndex], cx - TILE_SIZE / 2, cy - TILE_SIZE / 2, TILE_SIZE, TILE_SIZE);
 
-  // Speed boost indicator — cyan ring when active
+  // Speed boost indicator — butterfly-wing pink glow ring when active
   if (player.speedBoostMs > 0) {
     ctx.beginPath();
-    ctx.arc(cx, cy, r + 4, 0, Math.PI * 2);
-    ctx.strokeStyle = "rgba(79, 195, 247, 0.7)";
-    ctx.lineWidth = 2;
+    ctx.arc(cx, cy, r + 5, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(56, 189, 248, 0.80)";  // sky-blue wing shimmer
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+    // Second inner ring for extra shimmer
+    ctx.beginPath();
+    ctx.arc(cx, cy, r + 8, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(253, 230, 138, 0.50)";  // gold outer halo
+    ctx.lineWidth = 1.5;
     ctx.stroke();
   }
 }

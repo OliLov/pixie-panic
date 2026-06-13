@@ -22,8 +22,8 @@ function buildMaze(cols, rows) {
 }
 
 function drawMaze(ctx, maze) {
-  // Base fill — shows through the 1px gaps between tiles
-  ctx.fillStyle = "#0a120d";
+  // Base fill — soft lavender gap between tiles
+  ctx.fillStyle = "#d8b4fe";
   ctx.fillRect(0, 0, COLS * TILE_SIZE, ROWS * TILE_SIZE);
 
   for (const [rowIndex, rowTiles] of maze.entries()) {
@@ -34,33 +34,53 @@ function drawMaze(ctx, maze) {
 
       switch (tile) {
         case TILE.WALL: {
-          // Dense dark thicket
-          ctx.fillStyle = "#111f17";
+          // Glittering crystal wall — deep violet body
+          ctx.fillStyle = "#7c3aed";
           ctx.fillRect(x + 1, y + 1, s - 2, s - 2);
-          // Mossy top-left sheen
-          ctx.fillStyle = "#1c3322";
-          ctx.fillRect(x + 1, y + 1, s - 2, 3);
-          ctx.fillRect(x + 1, y + 1, 3, s - 2);
+          // Bright lilac top-left facet (light source)
+          ctx.fillStyle = "#a78bfa";
+          ctx.fillRect(x + 1, y + 1, s - 2, 4);
+          ctx.fillRect(x + 1, y + 1, 4, s - 2);
+          // Deep shadow bottom-right
+          ctx.fillStyle = "#4c1d95";
+          ctx.fillRect(x + s - 4, y + 1, 3, s - 2);
+          ctx.fillRect(x + 1, y + s - 4, s - 2, 3);
+          // Tiny sparkle dot at the top-left corner
+          ctx.fillStyle = "rgba(255, 255, 255, 0.55)";
+          ctx.fillRect(x + 3, y + 3, 3, 3);
           break;
         }
         case TILE.CRATE: {
-          // Fairy mushroom — deep purple body
-          ctx.fillStyle = "#3b1d5e";
+          // Enchanted flower-box — warm pink body
+          ctx.fillStyle = "#f9a8d4";
           ctx.fillRect(x + 1, y + 1, s - 2, s - 2);
-          // Lavender top-left highlight
-          ctx.fillStyle = "#5c3490";
+          // Hot-pink top-left highlight
+          ctx.fillStyle = "#f472b6";
           ctx.fillRect(x + 1, y + 1, s - 2, 4);
           ctx.fillRect(x + 1, y + 1, 4, s - 2);
-          // Dark bottom-right shadow
-          ctx.fillStyle = "#220f40";
+          // Rose bottom-right shadow
+          ctx.fillStyle = "#be185d";
           ctx.fillRect(x + s - 4, y + 1, 3, s - 2);
           ctx.fillRect(x + 1, y + s - 4, s - 2, 3);
+          // Small flower emblem in centre
+          ctx.fillStyle = "#ffffff";
+          const mx = x + s / 2;
+          const my = y + s / 2;
+          ctx.fillRect(mx - 1, my - 5, 2, 10); // vertical petal
+          ctx.fillRect(mx - 5, my - 1, 10, 2); // horizontal petal
+          ctx.beginPath();
+          ctx.arc(mx, my, 3, 0, Math.PI * 2);
+          ctx.fillStyle = "#fde68a";
+          ctx.fill();
           break;
         }
         default: {
-          // Forest floor
-          ctx.fillStyle = "#243d2e";
+          // Meadow floor — soft mint/sky gradient effect via two rects
+          ctx.fillStyle = "#bfdbfe";
           ctx.fillRect(x + 1, y + 1, s - 2, s - 2);
+          // Subtle lighter top shimmer
+          ctx.fillStyle = "rgba(255, 255, 255, 0.18)";
+          ctx.fillRect(x + 1, y + 1, s - 2, 6);
           break;
         }
       }

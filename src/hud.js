@@ -40,8 +40,8 @@ function updateHud() {
     const n  = i + 1;
     const cd = document.getElementById(`hud-p${n}-cd`);
 
-    document.getElementById(`hud-p${n}-hearts`).innerHTML = heartsHTML(p);
-    document.getElementById(`hud-p${n}-bombs`).textContent = bombsString(i);
+    document.getElementById(`hud-p${n}-hearts`).innerHTML  = heartsHTML(p);
+    document.getElementById(`hud-p${n}-bombs`).textContent  = bombsString(i);
 
     if (p.bombCooldown <= 0) {
       cd.textContent = "READY";
@@ -50,6 +50,10 @@ function updateHud() {
       cd.textContent = `${(p.bombCooldown / 1000).toFixed(1)}s`;
       cd.classList.remove("ready");
     }
+
+    // Grey out portrait when the fairy falls
+    const portrait = document.getElementById(`portrait-p${n}`)?.closest(".player-portrait");
+    if (portrait) portrait.classList.toggle("dead", !p.alive);
   }
 }
 

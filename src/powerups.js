@@ -53,16 +53,16 @@ function collectPowerups() {
 
 // Colours for each power-up type
 const POWERUP_COLOURS = {
-  [POWERUP_TYPE.BLAST_UP]: "#ff6f00",
-  [POWERUP_TYPE.BOMB_UP]:  "#b89cff",
-  [POWERUP_TYPE.SPEED_UP]: "#4fc3f7",
-  [POWERUP_TYPE.HEART]:    "#ff4d6d",
+  [POWERUP_TYPE.BLAST_UP]: "#f97316",  // warm orange — bigger blast
+  [POWERUP_TYPE.BOMB_UP]:  "#a855f7",  // violet — extra spells
+  [POWERUP_TYPE.SPEED_UP]: "#38bdf8",  // sky blue — wing speed
+  [POWERUP_TYPE.HEART]:    "#f43f5e",  // rose — fairy heart
 };
 const POWERUP_ICONS = {
   [POWERUP_TYPE.BLAST_UP]: "✦",
-  [POWERUP_TYPE.BOMB_UP]:  "💣",
-  [POWERUP_TYPE.SPEED_UP]: "⚡",
-  [POWERUP_TYPE.HEART]:    "♥",
+  [POWERUP_TYPE.BOMB_UP]:  "�",
+  [POWERUP_TYPE.SPEED_UP]: "🦋",
+  [POWERUP_TYPE.HEART]:    "💖",
 };
 
 function drawPowerups() {
@@ -72,21 +72,28 @@ function drawPowerups() {
     const cx = x + TILE_SIZE / 2;
     const cy = y + TILE_SIZE / 2;
     const colour = POWERUP_COLOURS[pu.type];
+    const r = TILE_SIZE / 2 - 8;
 
-    // Glowing circle base
+    // Soft glow halo behind the orb
     ctx.beginPath();
-    ctx.arc(cx, cy, TILE_SIZE / 2 - 10, 0, Math.PI * 2);
-    ctx.fillStyle = "#111f17";
+    ctx.arc(cx, cy, r + 6, 0, Math.PI * 2);
+    ctx.fillStyle = colour.replace(")", ", 0.22)").replace("rgb", "rgba");
+    ctx.fill();
+
+    // White pearlescent base circle
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fillStyle = "#fff0fb";
     ctx.fill();
     ctx.strokeStyle = colour;
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 2.5;
     ctx.stroke();
 
-    // Icon
+    // Icon centred inside
     ctx.fillStyle = colour;
     ctx.font      = "bold 18px sans-serif";
     ctx.textAlign    = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(POWERUP_ICONS[pu.type], cx, cy);
+    ctx.fillText(POWERUP_ICONS[pu.type], cx, cy + 1);
   }
 }

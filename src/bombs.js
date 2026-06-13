@@ -140,37 +140,70 @@ function drawBombs() {
       const cx = bomb.col * TILE_SIZE + TILE_SIZE / 2;
       const cy = bomb.row * TILE_SIZE + TILE_SIZE / 2;
       const r  = TILE_SIZE / 2 - 8;
-      const ringColour = bomb.ownerIndex === 0 ? "#b89cff" : "#4fc3f7";
+      // P1 = hot-pink spell orb, P2 = sky-blue spell orb
+      const orbColour  = bomb.ownerIndex === 0 ? "#ec4899" : "#38bdf8";
+      const glowColour = bomb.ownerIndex === 0 ? "#fce7f3" : "#e0f2fe";
 
+      // Soft outer glow ring
+      ctx.beginPath();
+      ctx.arc(cx, cy, r + 5, 0, Math.PI * 2);
+      ctx.fillStyle = bomb.ownerIndex === 0
+        ? "rgba(236, 72, 153, 0.20)"
+        : "rgba(56, 189, 248, 0.20)";
+      ctx.fill();
+
+      // Orb body
       ctx.beginPath();
       ctx.arc(cx, cy, r, 0, Math.PI * 2);
-      ctx.fillStyle = "#1a0a2e";
+      ctx.fillStyle = orbColour;
       ctx.fill();
-      ctx.strokeStyle = ringColour;
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
 
-      const fuseProgress = bomb.fuseMs / FUSE_MS;
-      const spark = Math.floor(bomb.fuseMs / 200) % 2 === 0 ? "#ffb7d5" : "#b89cff";
+      // Inner shine highlight
       ctx.beginPath();
-      ctx.arc(cx + 7 * fuseProgress, cy - 9 * fuseProgress, 3, 0, Math.PI * 2);
-      ctx.fillStyle = spark;
+      ctx.arc(cx - r * 0.3, cy - r * 0.3, r * 0.35, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(255, 255, 255, 0.55)";
+      ctx.fill();
+
+      // Animated sparkle trailing off the orb (fuse effect)
+      const fuseProgress = bomb.fuseMs / FUSE_MS;
+      const sparkTick = Math.floor(bomb.fuseMs / 180) % 2 === 0;
+      ctx.beginPath();
+      ctx.arc(
+        cx + (r + 4) * Math.cos(-0.8) * fuseProgress,
+        cy + (r + 4) * Math.sin(-0.8) * fuseProgress,
+        sparkTick ? 3.5 : 2.5,
+        0, Math.PI * 2
+      );
+      ctx.fillStyle = sparkTick ? "#fde68a" : glowColour;
       ctx.fill();
 
     } else {
-      const progress = bomb.blastMs / BLAST_DELAY;
+      // ✨ Magical sparkle blast ✨
+      const progress = bomb.blastMs / BLAST_DELAY; // 1 → 0
       for (const t of bomb.blastTiles) {
         const x = t.col * TILE_SIZE + 1;
         const y = t.row * TILE_SIZE + 1;
         const w = TILE_SIZE - 2;
+        const cx = t.col * TILE_SIZE + TILE_SIZE / 2;
+        const cy = t.row * TILE_SIZE + TILE_SIZE / 2;
 
-        ctx.fillStyle = progress > 0.5 ? "#ffb7d5" : "#b89cff";
+        // Flash colour fades hot-pink → gold → transparent
+        const alpha = progress;
+        ctx.fillStyle = progress > 0.5
+          ? `rgba(249, 168, 212, ${alpha})`   // pink
+          : `rgba(253, 230, 138, ${alpha})`;  // gold
         ctx.fillRect(x, y, w, w);
 
-        const inner = Math.floor(w * 0.3);
-        const off   = Math.floor(w * 0.35);
-        ctx.fillStyle = `rgba(255, 255, 255, ${progress * 0.8})`;
-        ctx.fillRect(x + off, y + off, inner, inner);
+        // Star-shaped centre sparkle
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate((1 - progress) * Math.PI * 0.5);
+        ctx.fillStyle = `rgba(255, 255, 255, ${alpha * 0.9})`;
+        for (let i = 0; i < 4; i++) {
+          ctx.fillRect(-1, -(w * 0.38), 2, w * 0.38);
+          ctx.rotate(Math.PI / 4);
+        }
+        ctx.restore();
       }
     }
   }

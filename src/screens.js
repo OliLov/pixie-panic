@@ -29,17 +29,17 @@ function showGameOver() {
   const message = document.getElementById("gameover-message");
 
   if (winner === "draw") {
-    title.textContent   = "Draw!";
-    message.textContent = "Both players fell in the blast!";
+    title.textContent   = "A Tie!";
+    message.textContent = "Both fairies lost their wings!";
   } else if (winner === 0) {
-    title.textContent   = "P1 Wins!";
-    message.textContent = "P2 was caught in the blast!";
+    title.textContent   = "Flora Wins!";
+    message.textContent = "Stella's magic was no match!";
   } else if (winner === 1) {
-    title.textContent   = "P2 Wins!";
-    message.textContent = "P1 was caught in the blast!";
+    title.textContent   = "Stella Wins!";
+    message.textContent = "Flora's spell backfired!";
   } else {
-    title.textContent   = "Game Over";
-    message.textContent = "Better luck next time!";
+    title.textContent   = "The Maze Wins";
+    message.textContent = "Even fairies have bad days.";
   }
 
   document.getElementById("screen-game").classList.remove("active");

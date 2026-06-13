@@ -14,9 +14,9 @@
     <!-- Start Screen -->
     <section id="screen-start" class="screen active">
       <div class="panel">
-        <h1>PixiePanic</h1>
-        <p>Navigate the maze and place bombs!</p>
-        <button id="btn-start">Start Game</button>
+        <h1>Pixie Panic</h1>
+        <p>Cast spells, outwit your rival fairy, and reign supreme!</p>
+        <button id="btn-start">Fly Into Battle</button>
       </div>
     </section>
 
@@ -26,48 +26,48 @@
 
         <!-- Top bar: general info -->
         <div class="hud-top">
-          <span class="hud-game-title">PixiePanic</span>
+          <span class="hud-game-title">~ Pixie Panic ~</span>
           <span class="hud-timer" id="hud-timer">0:00</span>
         </div>
 
         <!-- Middle row: P1 panel | canvas | P2 panel -->
         <div class="hud-middle">
 
-          <!-- P1 panel (left) -->
+          <!-- Fairy 1 panel (left) -->
           <div class="hud-side hud-side--left">
-            <span class="hud-player-label">P1</span>
+            <span class="hud-player-label">FLORA</span>
             <div class="player-portrait player-portrait--p1">
-              <img src="assets/purple-pixie.png" alt="P1" id="portrait-p1" />
+              <img src="assets/purple-pixie.png" alt="Flora" id="portrait-p1" />
             </div>
             <span class="hud-control-hint">WASD + Q</span>
             <div class="hud-divider"></div>
-            <span class="hud-stat-label">LIVES</span>
+            <span class="hud-stat-label">FAIRY DUST</span>
             <span class="hud-hearts" id="hud-p1-hearts">H H H</span>
             <div class="hud-divider"></div>
-            <span class="hud-stat-label">BOMBS</span>
-            <span class="hud-bombs" id="hud-p1-bombs">* . .</span>
+            <span class="hud-stat-label">SPELLS</span>
+            <span class="hud-spells" id="hud-p1-bombs">* . .</span>
             <div class="hud-divider"></div>
-            <span class="hud-stat-label">COOLDOWN</span>
+            <span class="hud-stat-label">RECHARGE</span>
             <span class="hud-cd ready" id="hud-p1-cd">READY</span>
           </div>
 
           <canvas id="game-canvas"></canvas>
 
-          <!-- P2 panel (right) -->
+          <!-- Fairy 2 panel (right) -->
           <div class="hud-side hud-side--right">
-            <span class="hud-player-label">P2</span>
+            <span class="hud-player-label">STELLA</span>
             <div class="player-portrait player-portrait--p2">
-              <img src="assets/green-pixie.png" alt="P2" id="portrait-p2" />
+              <img src="assets/green-pixie.png" alt="Stella" id="portrait-p2" />
             </div>
             <span class="hud-control-hint">ARROWS + SPC</span>
             <div class="hud-divider"></div>
-            <span class="hud-stat-label">LIVES</span>
+            <span class="hud-stat-label">FAIRY DUST</span>
             <span class="hud-hearts" id="hud-p2-hearts">H H H</span>
             <div class="hud-divider"></div>
-            <span class="hud-stat-label">BOMBS</span>
-            <span class="hud-bombs" id="hud-p2-bombs">* . .</span>
+            <span class="hud-stat-label">SPELLS</span>
+            <span class="hud-spells" id="hud-p2-bombs">* . .</span>
             <div class="hud-divider"></div>
-            <span class="hud-stat-label">COOLDOWN</span>
+            <span class="hud-stat-label">RECHARGE</span>
             <span class="hud-cd ready" id="hud-p2-cd">READY</span>
           </div>
 
@@ -75,7 +75,7 @@
 
         <!-- Bottom bar: symmetry / branding -->
         <div class="hud-bottom">
-          <span class="hud-bottom-text">* pixie panic *</span>
+          <span class="hud-bottom-text">~ where fairies dare ~</span>
         </div>
 
       </div>
@@ -86,7 +86,7 @@
       <div class="panel">
         <h1 id="gameover-title">Game Over</h1>
         <p id="gameover-message">Better luck next time!</p>
-        <button id="btn-restart">Play Again</button>
+        <button id="btn-restart">Fly Again</button>
       </div>
     </section>
 
