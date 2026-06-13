@@ -4,7 +4,7 @@
 
 body {
   margin: 0;
-  background-color: #1c2b24;
+  background-color: #0a120d;
 }
 
 /* Screen switching — only .active screens are shown */
@@ -36,12 +36,13 @@ body {
   gap: 1.5rem;
   padding: 2.5rem 2rem;
   width: 22rem;
-  background-color: #243320;
-  border: 2px solid #6daa5b;
+  background-color: #111f17;
+  border: 2px solid #3b1d5e;
   border-radius: 6px;
   box-shadow:
-    0 0 16px rgba(109, 170, 91, 0.25),
-    0 0 48px rgba(109, 170, 91, 0.1);
+    0 0 16px rgba(184, 156, 255, 0.2),
+    0 0 48px rgba(184, 156, 255, 0.08),
+    inset 0 1px 0 rgba(255, 183, 213, 0.1);
 }
 
 h1 {

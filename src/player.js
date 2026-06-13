@@ -31,13 +31,28 @@ function movePlayer(dt) {
 function drawPlayer() {
   const cx = player.col * TILE_SIZE + TILE_SIZE / 2;
   const cy = player.row * TILE_SIZE + TILE_SIZE / 2;
+  const r  = TILE_SIZE / 2 - 6;
 
+  // Soft outer glow
+  const glow = ctx.createRadialGradient(cx, cy, r * 0.4, cx, cy, r * 1.6);
+  glow.addColorStop(0, "rgba(255, 183, 213, 0.35)");
+  glow.addColorStop(1, "rgba(255, 183, 213, 0)");
   ctx.beginPath();
-  ctx.arc(cx, cy, TILE_SIZE / 2 - 6, 0, Math.PI * 2);
-  ctx.fillStyle = "#4fc3f7";
+  ctx.arc(cx, cy, r * 1.6, 0, Math.PI * 2);
+  ctx.fillStyle = glow;
   ctx.fill();
 
-  ctx.strokeStyle = "#1a1a2e";
+  // Body — pink to lavender radial gradient
+  const body = ctx.createRadialGradient(cx - r * 0.3, cy - r * 0.3, 1, cx, cy, r);
+  body.addColorStop(0, "#ffb7d5");
+  body.addColorStop(1, "#b89cff");
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.fillStyle = body;
+  ctx.fill();
+
+  // Crisp outline
+  ctx.strokeStyle = "#3b1d5e";
   ctx.lineWidth = 2;
   ctx.stroke();
 }

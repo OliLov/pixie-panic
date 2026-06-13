@@ -58,22 +58,41 @@ function drawBombs() {
     if (!bomb.exploding) {
       const cx = bomb.col * TILE_SIZE + TILE_SIZE / 2;
       const cy = bomb.row * TILE_SIZE + TILE_SIZE / 2;
+      const r  = TILE_SIZE / 2 - 8;
 
+      // Dark purple bomb body
       ctx.beginPath();
-      ctx.arc(cx, cy, TILE_SIZE / 2 - 8, 0, Math.PI * 2);
-      ctx.fillStyle = "#222222";
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.fillStyle = "#1a0a2e";
       ctx.fill();
+      ctx.strokeStyle = "#b89cff";
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
 
-      const spark = Math.floor(bomb.fuseMs / 200) % 2 === 0 ? "#ffffff" : "#ffeb3b";
+      // Flickering fuse spark — alternates between pink and lavender
+      const spark = Math.floor(bomb.fuseMs / 200) % 2 === 0 ? "#ffb7d5" : "#b89cff";
       ctx.beginPath();
       ctx.arc(cx + 7, cy - 9, 3, 0, Math.PI * 2);
       ctx.fillStyle = spark;
       ctx.fill();
+
     } else {
+      // Explosion — fairy-dust burst in pink and lavender
       const progress = bomb.blastMs / BLAST_DELAY;
       for (const t of bomb.blastTiles) {
-        ctx.fillStyle = progress > 0.5 ? "#ffeb3b" : "#ff6f00";
-        ctx.fillRect(t.col * TILE_SIZE + 1, t.row * TILE_SIZE + 1, TILE_SIZE - 2, TILE_SIZE - 2);
+        const x = t.col * TILE_SIZE + 1;
+        const y = t.row * TILE_SIZE + 1;
+        const w = TILE_SIZE - 2;
+
+        // Outer colour shifts pink → lavender as it fades
+        ctx.fillStyle = progress > 0.5 ? "#ffb7d5" : "#b89cff";
+        ctx.fillRect(x, y, w, w);
+
+        // Bright centre sparkle
+        const inner = Math.floor(w * 0.3);
+        const off   = Math.floor(w * 0.35);
+        ctx.fillStyle = `rgba(255, 255, 255, ${progress * 0.8})`;
+        ctx.fillRect(x + off, y + off, inner, inner);
       }
     }
   }
